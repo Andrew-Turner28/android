@@ -14,6 +14,7 @@
             position: absolute;
             top: 0;
             left: 0;
+            transition: 1s;
         }
 
         .slide {
@@ -25,9 +26,17 @@
             top: 0;
             left: 0;
             background-repeat: no-repeat;
-            /* transition: opacity 1.5s; */
+            
             
             transition: opacity 1.5s;
+        }
+        
+        body.slide.slide {
+            display: inline-block;
+            position: relative;
+            float: left;
+            width: 100vw;
+            height: 100vh;
         }
 
         .button {
@@ -79,13 +88,22 @@
 
 </body>
 <script>
+    var animationType ='fade';
     var allImages = [];
     function start() {
         var hash = window.location.hash.replace('#', '');
         allImages = hash.split(',');
+        animationType = allImages[allImages.length-1];
+
+        document.body.classname = animationType;
+
+
+        if (animationType == "slide") {
+            document.getElementById('slideContainer').style.width = 100 * (allImages.length -1) + "vw";
+        }
         var markup = "";
         var markup1 = "";
-        for (var i = 0; i < allImages.length; i++) {
+        for (var i = 0; i < allImages.length-1; i++) {
             markup += "<div style='background-image: url(" + allImages[i] + ")' class='slide'></div>";
             
         }
@@ -117,20 +135,21 @@
         goToSlide(prev);
     }
     function goToSlide(current) {
-        //here
-        var slides = document.getElementsByClassName('slide');
-
-        //document.getElementById("slideContainer").style.transform = "translateX(-"+(current-1)*100+"vw)";
-        
-       
-        for (var i = 0; i < slides.length; i++) {
-            if (i == current - 1) {
-                slides[i].style.opacity = '1';
-            }
-            else {
-                slides[i].style.opacity = '0';
+        if (animationType == "fade") {
+            var slides = document.getElementsByClassName('slide');
+            for (var i = 0; i < slides.length; i++) {
+                if (i == current - 1) {
+                    slides[i].style.opacity = '1';
+                }
+                else {
+                    slides[i].style.opacity = '0';
+                }
             }
         }
+        else {
+            document.getElementById("slideContainer").style.transform = "translateX(-"+(current-1)*100+"vw)";
+        }
+        
 
 
         var buttons = document.getElementsByClassName('button');
